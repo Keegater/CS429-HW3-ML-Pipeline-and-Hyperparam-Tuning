@@ -1,16 +1,41 @@
-# This is a sample Python script.
+import idx2numpy
+import numpy as np
+import matplotlib.pyplot as plt
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+# MNIST Dataset
+mnist_train_images = idx2numpy.convert_from_file("data/train-images.idx3-ubyte")
+mnist_train_labels = idx2numpy.convert_from_file("data/train-labels.idx1-ubyte")
+mnist_test_images  = idx2numpy.convert_from_file("data/t10k-images.idx3-ubyte")
+mnist_test_labels  = idx2numpy.convert_from_file("data/t10k-labels.idx1-ubyte")
+
+# Fashion Dataset
+fashion_train_images = idx2numpy.convert_from_file("data/fashion-train-images.idx3-ubyte")
+fashion_train_labels = idx2numpy.convert_from_file("data/fashion-train-labels.idx1-ubyte")
+fashion_test_images  = idx2numpy.convert_from_file("data/fashion-t10k-images.idx3-ubyte")
+fashion_test_labels  = idx2numpy.convert_from_file("data/fashion-t10k-labels.idx1-ubyte")
+
+# Flattening
+mnist_train_images_flat = mnist_train_images.reshape(mnist_train_images.shape[0], 784)
+mnist_test_images_flat  = mnist_test_images.reshape(mnist_test_images.shape[0], 784)
+fashion_train_images_flat = fashion_train_images.reshape(fashion_train_images.shape[0], 784)
+fashion_test_images_flat  = fashion_test_images.reshape(fashion_test_images.shape[0], 784)
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+# Show random samples from MNIST and Fashion data
+plt.figure(figsize=(8, 5))
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+plt.subplot(1, 2, 1)
+rand = np.random.choice(len(mnist_train_images))
+plt.imshow(mnist_train_images[rand], cmap='gray')
+plt.title(f"MNIST Label: {mnist_train_labels[0]}")
+plt.axis('off')
+
+plt.subplot(1, 2, 2)
+rand = np.random.choice(len(fashion_train_images))
+plt.imshow(fashion_train_images[rand], cmap='gray')
+plt.title(f"Fashion Label: {fashion_train_labels[0]}")
+plt.axis('off')
+
+plt.show()
