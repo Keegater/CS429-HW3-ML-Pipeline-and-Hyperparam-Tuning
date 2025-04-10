@@ -61,12 +61,12 @@ def run_pipeline(X_train, y_train, X_test, y_test, method='pca', dims=[50], kern
 
 
 
-
-run_pipeline(mnist_train_images_flat, mnist_train_labels,
-             mnist_test_images_flat, mnist_test_labels,
-             method='pca', dims=[50, 100, 200], kernels=['linear', 'rbf'])
-
-# or try LDA on Fashion MNIST
-run_pipeline(fashion_train_images_flat, fashion_train_labels,
-             fashion_test_images_flat, fashion_test_labels,
-             method='lda', dims=[50, 100], kernels=['linear', 'poly'])
+#
+# run_pipeline(mnist_train_images_flat, mnist_train_labels,
+#              mnist_test_images_flat, mnist_test_labels,
+#              method='pca', dims=[50, 100, 200], kernels=['linear', 'rbf'])
+#
+# # or try LDA on Fashion MNIST
+# run_pipeline(fashion_train_images_flat, fashion_train_labels,
+#              fashion_test_images_flat, fashion_test_labels,
+#              method='lda', dims=[50, 100], kernels=['linear', 'poly'])

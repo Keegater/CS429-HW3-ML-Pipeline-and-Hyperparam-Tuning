@@ -42,13 +42,13 @@ plt.figure(figsize=(8, 5))
 plt.subplot(1, 2, 1)
 rand = np.random.choice(len(mnist_train_images))
 plt.imshow(mnist_train_images[rand], cmap='gray')
-plt.title(f"MNIST Label: {mnist_train_labels[0]}")
+plt.title(f"MNIST Label: {mnist_train_labels[rand]}")
 plt.axis('off')
 
 plt.subplot(1, 2, 2)
 rand = np.random.choice(len(fashion_train_images))
 plt.imshow(fashion_train_images[rand], cmap='gray')
-plt.title(f"Fashion Label: {fashion_train_labels[0]}")
+plt.title(f"Fashion Label: {fashion_train_labels[rand]}")
 plt.axis('off')
 
 plt.show()
@@ -93,7 +93,7 @@ def run_pipeline(X_train, y_train, X_test, y_test, method='pca', dims=[50], kern
                 ('svc', SVC(kernel=kernel))
             ])
 
-            grid = GridSearchCV(pipeline, param_grids[kernel], cv=3, n_jobs=-1, verbose=1)
+            grid = GridSearchCV(pipeline, param_grids[kernel], cv=3, n_jobs=-1, verbose=3)
             grid.fit(X_train, y_train)
 
             print("Best parameters:", grid.best_params_)
@@ -111,7 +111,11 @@ run_pipeline(mnist_train_images_flat, mnist_train_labels,
 
 run_pipeline(fashion_train_images_flat, fashion_train_labels,
              fashion_test_images_flat, fashion_test_labels,
-             method='lda', dims=[50, 100], kernels=['linear', 'poly'])
-
+             method='lda', dims=[9], kernels=['linear', 'poly'])
+# Dims set to 9
+# dim = min(dim, n_classes - 1)  # LDA limit
+# limits the number to 9 for any higher value.
+# Should we run multiple dims < 9 for testing? I havent read enough on this section to know the requirements
+# but for now only having 9 recudes redundant runs and saves runtime.
 
 
