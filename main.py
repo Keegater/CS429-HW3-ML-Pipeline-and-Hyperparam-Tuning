@@ -78,28 +78,19 @@ high = min(9, refined_degree_best_poly + 1)
 svc_degree_final_poly = list(range(low, high + 1))
 
 
-
-#####################################################################################
 ##################### part 3 ##################################################
-
 # build hyperparam arrays of 5 values within range of 0.5X and 1.5X of refined value
 param_grids = {
     'linear': {
-        #'svc__C': [0.0095, 0.00985, 0.0099, 0.00995]
-        'svc__C': np.linspace(refined_svcC_best_linear * 0.5, refined_svcC_best_linear * 1.5, num=5)
+        'svc__C': np.linspace(refined_svcC_best_linear * 0.75, refined_svcC_best_linear * 1.5, num=4)
     },
     'rbf': {
-        #'svc__C': [7, 7.5, 8, 8.5],
-        #'svc__gamma': [0.0025, 0.0029, 0.003, 0.0031]
-        'svc__C': np.linspace(refined_svcC_best_rbf * 0.5, refined_svcC_best_rbf * 1.5, num=5),
-        'svc__gamma': np.linspace(refined_gamma_best_rbf * 0.5, refined_gamma_best_rbf * 1.5, num=5)
+        'svc__C': np.linspace(refined_svcC_best_rbf * 0.75, refined_svcC_best_rbf * 1.5, num=4),
+        'svc__gamma': np.linspace(refined_gamma_best_rbf * 0.75, refined_gamma_best_rbf * 1.5, num=4)
     },
     'poly': {
-        #'svc__C': [0.1, 1, 10],
-        #'svc__gamma': [0.001, 0.01],
-        #'svc__degree': [2, 3, 4]
-        'svc__C': np.linspace(refined_svcC_best_poly * 0.5, refined_svcC_best_poly * 1.5, num=5),
-        'svc__gamma': np.linspace(refined_gamma_best_poly * 0.5, refined_gamma_best_poly * 1.5, num=5),
+        'svc__C': np.linspace(refined_svcC_best_poly * 0.75, refined_svcC_best_poly * 1.5, num=4),
+        'svc__gamma': np.linspace(refined_gamma_best_poly * 0.75, refined_gamma_best_poly * 1.5, num=4),
         'svc__degree': svc_degree_final_poly
     }
 }
@@ -166,12 +157,19 @@ def plot_confusion_matrix(cm, title):
 
 run_pipeline(mnist_train_images_flat, mnist_train_labels,
              mnist_test_images_flat, mnist_test_labels,
-             method='pca', dims=[50, 100, 200], kernels=['linear', 'rbf'])
+             method='pca', dims=[50, 100, 200], kernels=['linear', 'rbf', 'poly'])
 
+run_pipeline(mnist_train_images_flat, mnist_train_labels,
+             mnist_test_images_flat, mnist_test_labels,
+             method='lda', dims=[9], kernels=['linear', 'rbf', 'poly'])
 
 run_pipeline(fashion_train_images_flat, fashion_train_labels,
              fashion_test_images_flat, fashion_test_labels,
-             method='lda', dims=[9], kernels=['linear', 'poly'])
+             method='pca', dims=[50, 100, 200], kernels=['linear', 'rbf', 'poly'])
+
+run_pipeline(fashion_train_images_flat, fashion_train_labels,
+             fashion_test_images_flat, fashion_test_labels,
+             method='lda', dims=[9], kernels=['linear', 'rbf', 'poly'])
 # Dims set to 9
 # dim = min(dim, n_classes - 1)  # LDA limit
 # limits the number to 9 for any higher value.
