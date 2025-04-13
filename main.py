@@ -54,21 +54,53 @@ plt.axis('off')
 plt.show()
 
 
+"""
+To save runtime, hyperparam array ranges were "trimmed" by performing a coarse search on an initial log range of 8 values. 
+Testing was done using 20% of the dataset. The best found hyperparams were then tested again (with 20% of data)
+on a range of 5 values linearly spaced between 0.5X and 1.5X the previous best found value. The final "refined" values
+are then used to build a linearly spaced array of 5 values 0.5X and 1.5X. These are finally tested on the whole dataset. 
+
+This eliminates extreme parameters which may heavily impact runtime and allows us to choose the values for final testing
+more precisely. 
+"""
+refined_svcC_best_linear = 0.0125
+
+refined_svcC_best_rbf = 12.5
+refined_gamma_best_rbf = 0.0015
+
+refined_svcC_best_poly = 0.05
+refined_gamma_best_poly = 0.05
+refined_degree_best_poly = 3
+
+# build degree array, ensure max of 9 and min of 2 with no duplicates
+low = max(2, refined_degree_best_poly - 1)
+high = min(9, refined_degree_best_poly + 1)
+svc_degree_final_poly = list(range(low, high + 1))
+
+
+
 #####################################################################################
 ##################### part 3 ##################################################
 
+# build hyperparam arrays of 5 values within range of 0.5X and 1.5X of refined value
 param_grids = {
     'linear': {
-        'svc__C': [0.0095, 0.00985, 0.0099, 0.00995]
+        #'svc__C': [0.0095, 0.00985, 0.0099, 0.00995]
+        'svc__C': np.linspace(refined_svcC_best_linear * 0.5, refined_svcC_best_linear * 1.5, num=5)
     },
     'rbf': {
-        'svc__C': [7, 7.5, 8, 8.5],
-        'svc__gamma': [0.0025, 0.0029, 0.003, 0.0031]
+        #'svc__C': [7, 7.5, 8, 8.5],
+        #'svc__gamma': [0.0025, 0.0029, 0.003, 0.0031]
+        'svc__C': np.linspace(refined_svcC_best_rbf * 0.5, refined_svcC_best_rbf * 1.5, num=5),
+        'svc__gamma': np.linspace(refined_gamma_best_rbf * 0.5, refined_gamma_best_rbf * 1.5, num=5)
     },
     'poly': {
-        'svc__C': [0.1, 1, 10],
-        'svc__gamma': [0.001, 0.01],
-        'svc__degree': [2, 3, 4]
+        #'svc__C': [0.1, 1, 10],
+        #'svc__gamma': [0.001, 0.01],
+        #'svc__degree': [2, 3, 4]
+        'svc__C': np.linspace(refined_svcC_best_poly * 0.5, refined_svcC_best_poly * 1.5, num=5),
+        'svc__gamma': np.linspace(refined_gamma_best_poly * 0.5, refined_gamma_best_poly * 1.5, num=5),
+        'svc__degree': svc_degree_final_poly
     }
 }
 

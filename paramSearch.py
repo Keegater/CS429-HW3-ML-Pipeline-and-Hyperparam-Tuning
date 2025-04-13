@@ -107,7 +107,7 @@ poly_pipeline = Pipeline([
 coarse_poly_grid = {
     'svc__C': np.logspace(-1, 2, num=4),  # [0.1, 1, 10, 100]
     'svc__gamma': np.logspace(-3, -1, num=3),  # [0.001, 0.01, 0.1]
-    'svc__degree': [6, 7, 8, 9]
+    'svc__degree': [2, 3, 4, 5, 6, 7, 8, 9]
 }
 
 # coarse search subset
