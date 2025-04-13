@@ -1,7 +1,7 @@
 import idx2numpy
 import numpy as np
 import matplotlib.pyplot as plt
-
+import pandas as pd
 import numpy as np
 import warnings
 
@@ -11,7 +11,7 @@ from sklearn.decomposition import PCA
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as LDA
 from sklearn.svm import SVC
 from sklearn.model_selection import GridSearchCV
-from sklearn.metrics import classification_report
+from sklearn.metrics import classification_report, confusion_matrix
 
 warnings.filterwarnings("ignore")
 
@@ -104,6 +104,7 @@ param_grids = {
     }
 }
 
+results = []
 
 def run_pipeline(X_train, y_train, X_test, y_test, method='pca', dims=[50], kernels=['linear']):
     for dim in dims:
@@ -133,7 +134,34 @@ def run_pipeline(X_train, y_train, X_test, y_test, method='pca', dims=[50], kern
             print("Classification Report:")
             print(classification_report(y_test, y_pred))
 
+            # generate and print confusion matrices
+            cm = confusion_matrix(y_test, y_pred)
+            print("Confusion Matrix:")
+            print(cm)
+            plot_confusion_matrix(cm, f"Confusion Matrix for: {kernel} SVC ({method.upper()}, dim = {dim})")
 
+            accuracy = grid.score(X_test, y_test)
+            best_params = grid.best_params_
+            results.append({
+                'Reducer': method.upper(),
+                'Dim': dim,
+                'Kernel': kernel,
+                'Accuracy': accuracy,
+                'BestParams': best_params
+            })
+
+
+def plot_confusion_matrix(cm, title):
+    plt.figure(figsize=(6, 6))
+    plt.imshow(cm, interpolation='nearest', cmap=plt.cm.Blues)
+    plt.title(title)
+    plt.colorbar()
+    tick_marks = np.arange(10)
+    plt.xticks(tick_marks, tick_marks)
+    plt.yticks(tick_marks, tick_marks)
+    plt.ylabel('True Label')
+    plt.xlabel('Predicted Label')
+    plt.show()
 
 
 run_pipeline(mnist_train_images_flat, mnist_train_labels,
@@ -147,7 +175,10 @@ run_pipeline(fashion_train_images_flat, fashion_train_labels,
 # Dims set to 9
 # dim = min(dim, n_classes - 1)  # LDA limit
 # limits the number to 9 for any higher value.
-# Should we run multiple dims < 9 for testing? I havent read enough on this section to know the requirements
-# but for now only having 9 recudes redundant runs and saves runtime.
+
+results_df = pd.DataFrame(results)
+print(results_df)
+
+
 
 
