@@ -117,7 +117,7 @@ def run_pipeline(X_train, y_train, X_test, y_test, method='pca', dims=[50], kern
                 ('svc', SVC(kernel=kernel))
             ])
 
-            grid = GridSearchCV(pipeline, param_grids[kernel], cv=3, n_jobs=-1, verbose=3)
+            grid = GridSearchCV(pipeline, param_grids[kernel], cv=3, n_jobs=-1, verbose=1)
             grid.fit(X_train, y_train)
 
             print("Best parameters:", grid.best_params_)
@@ -138,7 +138,8 @@ def run_pipeline(X_train, y_train, X_test, y_test, method='pca', dims=[50], kern
                 'Dim': dim,
                 'Kernel': kernel,
                 'Accuracy': accuracy,
-                'BestParams': best_params
+                'BestParams': best_params,
+                'Confusion Matrix': cm,
             })
 
 
@@ -153,6 +154,7 @@ def plot_confusion_matrix(cm, title):
     plt.ylabel('True Label')
     plt.xlabel('Predicted Label')
     plt.show()
+
 
 
 run_pipeline(mnist_train_images_flat, mnist_train_labels,
@@ -174,8 +176,11 @@ run_pipeline(fashion_train_images_flat, fashion_train_labels,
 # dim = min(dim, n_classes - 1)  # LDA limit
 # limits the number to 9 for any higher value.
 
+pd.set_option('display.max_rows', None)
+pd.set_option('display.max_columns', None)
 results_df = pd.DataFrame(results)
 print(results_df)
+results_df.to_csv("results.csv", index=False)
 
 
 
